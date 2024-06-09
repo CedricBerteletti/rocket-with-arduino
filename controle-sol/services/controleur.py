@@ -11,6 +11,7 @@ from services.connexion import Connexion
 dict_compilation = {"system.delay": "0D",
 
                     "logger.status": "LS",
+                    "logger.log": "LL",
                     "logger.initSdcard": "LC",
                     "logger.flushToSdcard": "LF",
                     "logger.activateLogImuData": "LI 1",
@@ -84,36 +85,36 @@ class Controleur():
         return commande
 
     def compiler_commande(self, commande_brute):
-        commande_nettoyee = commande_brute
+        commande_nettoyee = commande_brute.split(sep="#", maxsplit=1)[0]
+        commande_nettoyee = commande_nettoyee.strip()
 
-        # TODO : supprimer commentaire après le signe #
-
-        if " " in commande_nettoyee:
-            operation, arguments = commande_nettoyee.strip().split(sep=" ", maxsplit=1)
-        else:
-            operation = commande_nettoyee
-            arguments = ""
-
-        if operation in dict_compilation:
-            operation_abbregee = dict_compilation[operation]
-
-            if operation_abbregee[0:2] == "FC":
-                # Cas particulier de l'instruction déclarant les instructions du plan de vol
-                num_instruction, duree, commande_planifiee_brute = arguments.split(sep=" ", maxsplit=2)
-                commande_planifiee = self.compiler_commande(commande_planifiee_brute)
-                if commande_planifiee[0:3] != "ERR":
-                    commande = f"FC {num_instruction} {duree} {commande_planifiee}"
-                else:
-                    commande = ERROR_COMMANDE_INCONNUE
-            elif "{}" not in operation_abbregee:
-                # Remplacement simple
-                commande = f"{operation_abbregee} {arguments}"
+        if commande_nettoyee:
+            if " " in commande_nettoyee:
+                operation, arguments = commande_nettoyee.split(sep=" ", maxsplit=1)
             else:
-                # Remplacement en respectant un formatage
-                args = arguments.split(" ")
-                commande = operation_abbregee.format(args)
-        else:
-            commande = ERROR_COMMANDE_INCONNUE
+                operation = commande_nettoyee
+                arguments = ""
+
+            if operation in dict_compilation:
+                operation_abbregee = dict_compilation[operation]
+
+                if operation_abbregee[0:2] == "FC":
+                    # Cas particulier de l'instruction déclarant les instructions du plan de vol
+                    num_instruction, duree, commande_planifiee_brute = arguments.split(sep=" ", maxsplit=2)
+                    commande_planifiee = self.compiler_commande(commande_planifiee_brute)
+                    if commande_planifiee[0:3] != "ERR":
+                        commande = f"FC {num_instruction} {duree} {commande_planifiee}"
+                    else:
+                        commande = ERROR_COMMANDE_INCONNUE
+                elif "{}" not in operation_abbregee:
+                    # Remplacement simple
+                    commande = f"{operation_abbregee} {arguments}"
+                else:
+                    # Remplacement en respectant un formatage
+                    args = arguments.split(" ")
+                    commande = operation_abbregee.format(args)
+            else:
+                commande = ERROR_COMMANDE_INCONNUE
 
         return commande
 

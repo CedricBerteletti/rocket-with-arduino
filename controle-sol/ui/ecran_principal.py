@@ -10,7 +10,7 @@ import time
 
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QTextCursor
-from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QGridLayout, QGroupBox, QLineEdit, QTextEdit, QPushButton, QSplitter, QCheckBox
+from PyQt6.QtWidgets import QFrame, QHBoxLayout, QVBoxLayout, QGridLayout, QFileDialog, QGroupBox, QLineEdit, QTextEdit, QPushButton, QSplitter, QCheckBox
 
 import ui.graphiques as graphiques
 from ui.ui_utils import set_default_layout_params
@@ -102,9 +102,9 @@ class EcranPrincipal(QFrame):
         self.grp_command.layout().addWidget(button, 0, 0)
         # TODO
 
-        button = QPushButton("Programmer")
+        button = QPushButton("Charger")
         self.grp_command.layout().addWidget(button, 0, 1)
-        # TODO
+        button.clicked.connect(self.charger_programme)
 
         button = QPushButton("Vider logs")
         self.grp_command.layout().addWidget(button, 0, 2)        
@@ -171,6 +171,12 @@ class EcranPrincipal(QFrame):
         self.tb_imu_logs.setStyleSheet("background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);")
         self.grp_imu.layout().addWidget(self.tb_imu_logs)
 
+    def charger_programme(self):
+        fileName = QFileDialog.getOpenFileName(self, "Charger programme de la fusée", "",
+                                               "Fichiers rfp (*.rfp)")
+        with open(fileName[0]) as f:
+            lines = f.read().splitlines()
+            self.executer_commandes(lines)
 
     def maj(self):
         if self.actif:
@@ -222,14 +228,14 @@ class EcranPrincipal(QFrame):
         self.tb_imu_logs.clear()
 
     def imu_vider_et_effacer(self):
-        # TODO
-        pass
+        self.vider_logs_imu()
+        self.graphiques.effacer()
 
     def calibrer(self):
         self.centrale.calibrer()
 
     def nouvelles_commandes(self):
-        commandes = self.tb_command.text().splitlines()  
+        commandes = self.tb_command.text().splitlines()
         self.tb_command.clear()
         self.executer_commandes(commandes)
 
@@ -237,7 +243,7 @@ class EcranPrincipal(QFrame):
         for commande in commandes:
             self.executer_commande(commande)
             # Attente d'envoi de la commande (risque de perte sinon : UDP et non TCP)
-            time.sleep(0.2)
+            time.sleep(0.05)
 
     def executer_commande(self, commande):
         self.tb_logs.insertHtml(f"<h1 style=\"color:blue;\">> {commande}</h1>\n")

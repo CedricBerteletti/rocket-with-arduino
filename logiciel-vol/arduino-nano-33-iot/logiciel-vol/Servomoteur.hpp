@@ -14,6 +14,8 @@
 
 inline constexpr int SERVO_DECALAGE_PAR_DEFAUT = 90;
 inline constexpr float SERVO_PENTE_PAR_DEFAUT = 0.9f;
+inline constexpr float SERVO_POSITION_MIN = -100;
+inline constexpr float SERVO_POSITION_MAX = 100;
 
 class Servomoteur
 {

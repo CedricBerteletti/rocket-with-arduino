@@ -2,6 +2,9 @@
 rocket.status
 wifi.status
 logger.status
-servo.status
+servo.status 0
+servo.status 1
+servo.status 2
+servo.status 3
 flightplan.getSteps
 imu.getBuffer

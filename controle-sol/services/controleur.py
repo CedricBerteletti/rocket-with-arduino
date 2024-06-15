@@ -4,6 +4,8 @@
 Envoi des commandes à la fusée et réception
 """
 
+
+from datetime import datetime
 from services.connexion import Connexion
 
 
@@ -14,6 +16,8 @@ dict_compilation = {"system.delay": "0D",
                     "logger.log": "LL",
                     "logger.initSdcard": "LC",
                     "logger.flushToSdcard": "LF",
+                    "logger.sizeLogsFile": "LT",
+                    "logger.clearLogsFile": "LD",
                     "logger.activateLogImuData": "LI 1",
                     "logger.deactivateLogImuData": "LI 0",
                     "logger.activateLogFlush": "LW 1",
@@ -85,9 +89,11 @@ class Controleur():
         return commande
 
     def compiler_commande(self, commande_brute):
-        commande_nettoyee = commande_brute.split(sep="#", maxsplit=1)[0]
+        commande_nettoyee = self.pretraiter_commande(commande_brute)
+        commande_nettoyee = commande_nettoyee.split(sep="#", maxsplit=1)[0]
         commande_nettoyee = commande_nettoyee.strip()
 
+        commande = ""
         if commande_nettoyee:
             if " " in commande_nettoyee:
                 operation, arguments = commande_nettoyee.split(sep=" ", maxsplit=1)
@@ -117,6 +123,11 @@ class Controleur():
                 commande = ERROR_COMMANDE_INCONNUE
 
         return commande
+    
+    def pretraiter_commande(self, commande):
+        date = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        res = commande.replace("{{DATE}}", date)
+        return res
 
     def traduire_logs(self, log):
         # TODO

@@ -27,6 +27,7 @@ class CentraleInertielle():
         self.offset_vgamma = 0.0
         self.filtre_vitesse_angulaire_min = float(settings.get("imu.filters.angular_velocity_min"))
         self.filtre_acceleration_min = float(settings.get("imu.filters.angular_velocity_min"))
+        self.integrate = settings.get_bool("telemetry.integration")
 
     def ajouter_telemetrie(self, log):
         if (log):
@@ -69,12 +70,13 @@ class CentraleInertielle():
         logging.debug(f"Nouvelles données inertielles brutes = {data}")
 
         # Intégrations pour retrouver les vitesses, positions et angles à partir des données des accéléromètres et gyroscopes
-        temps_ecoule = data.t - self.courant.t
-        data.alpha = self.integration(self.courant.alpha, self.courant.valpha, data.valpha, temps_ecoule)
-        logging.debug(f"Calcul du nouvel angle à deltat={temps_ecoule} s : a'={data.alpha} ; a={self.courant.alpha} ; va={data.valpha}")
-        data.beta = self.integration(self.courant.beta, self.courant.vbeta, data.vbeta, temps_ecoule)
-        data.gamma = self.integration(self.courant.gamma, self.courant.vgamma, data.vgamma, temps_ecoule)
-        # TODO vitesses et positions
+        if self.integrate:
+            temps_ecoule = data.t - self.courant.t
+            data.alpha = self.integration(self.courant.alpha, self.courant.valpha, data.valpha, temps_ecoule)
+            logging.debug(f"Calcul du nouvel angle à deltat={temps_ecoule} s : a'={data.alpha} ; a={self.courant.alpha} ; va={data.valpha}")
+            data.beta = self.integration(self.courant.beta, self.courant.vbeta, data.vbeta, temps_ecoule)
+            data.gamma = self.integration(self.courant.gamma, self.courant.vgamma, data.vgamma, temps_ecoule)
+            # TODO vitesses et positions
 
         # Mise à jour de la liste
         self.courant = data

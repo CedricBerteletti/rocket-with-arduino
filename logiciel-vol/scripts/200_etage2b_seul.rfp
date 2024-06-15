@@ -1,7 +1,11 @@
 # Script de configuration du plan de vol pour le lancememt de l'étage 2 seul (version 2b)
-flightplan.configureStep 0 5000 rocket.status
+
+flightplan.configureStep 0 10000 logger.log DECOMPTE FINAL {{DATE}}
 
 flightplan.configureStep 1 0 pin.fire 14    # Allumage des étages avec les pins 14 à 17
 flightplan.configureStep 2 5000 rocket.stage
 flightplan.configureStep 3 0 rocket.stage
-flightplan.configureStep 4 0 logger.log FIN DE MISSION
+flightplan.configureStep 4 0 logger.deactivateLogFlush
+flightplan.configureStep 5 0 logger.log FIN DE MISSION
+
+flightplan.configureStep 6 -1 logger.deactivateLogRocketStatus

@@ -21,6 +21,8 @@ class Logger
     void logStatut();
     void log(const char module[], const char message[], const char details[]);
     void forcerEcritureSurCarteSd();
+    void viderFichierCarteSd();
+    long tailleFichierCarteSd();
     bool logSerieActif = true;
     bool logCarteSdActif = false;
     bool logUdpActif = false;

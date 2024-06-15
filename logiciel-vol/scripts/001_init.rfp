@@ -1,5 +1,5 @@
 # Script initialisant la fusée avec les paramètres par défaut
 wifi.broadcastUdpClient 0 192.168.0.50 23900
-logger.activateLogRocketStatus
-logger.activateLogFlush
+logger.deactivateLogRocketStatus
+logger.deactivateLogFlush
 logger.activateLogImuData

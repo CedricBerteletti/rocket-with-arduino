@@ -22,6 +22,7 @@ static const long DELAI_STATUT = 1000;
 static const long DELAI_IMU = 50; // (en ms)
 static const long DELAI_COMMANDE = 50; // (en ms) Tentative de lecture d'une nouvelle commande toutes les 100 ms
 
+static const int NB_SERVOS = 4;
 static const int SERVO0_PIN = 7;
 static const int SERVO1_PIN = 6;
 static const int SERVO2_PIN = 20;
@@ -58,12 +59,11 @@ char commande[LONGUEUR_MAX_COMMANDE];
 char strLog[LONGUEUR_MAX_CHAINE_CARACTERES];
 
 // Servomoteurs des ailerons et de la tuyère sur les broches 18 à 21
-static const int NB_SERVOS = 4;
 Servomoteur servos[NB_SERVOS];
 int servosBroches[NB_SERVOS] = {SERVO0_PIN, SERVO1_PIN, SERVO2_PIN, SERVO3_PIN};
 
 
-/* Etats de la fusée */
+/* États de la fusée */
 static const int CONFIGURATION = -1;
 static const int DECOMPTE_FINAL = 0;
 int etage = 0;
@@ -219,7 +219,7 @@ void verifierEtExecuterCommande(const char commande[]) {
 /* Premier switch sur la classe de commandes, pour rationaliser le nombre de comparaisons
 et les variables créées dans la pile */
 void executerCommande(const char commande[]) {
-  logger.log(MODULE_COMMANDE, "COMMAND_RECEPTION", commande);
+  logger.log(MODULE_COMMANDE, "EXECUTION", commande);
 
   if(chaineCommencePar(commande, "P")) {
     executerCommandeBroche(commande);
@@ -324,9 +324,10 @@ void executerCommandePlanDeVol(const char commande[]) {
     copierToken(commande, " ", 2, chDelai);
     paramEtape = atoi(chEtape);
     paramDelai = atoi(chDelai);
-    dureeEtape[paramEtape] = paramDelai;
-    // TODO Vérifier paramEtape
-    copierToken(commande, " ", 3, commandeEtape[paramEtape], true);
+    if(paramEtape >= 0 && paramEtape < NB_ETAPES) {
+      dureeEtape[paramEtape] = paramDelai;
+      copierToken(commande, " ", 3, commandeEtape[paramEtape], true);
+    }
   }
   // Lister ligne par ligne tout le programme de vol
   else if(chaineCommencePar(commande, "FS")) {
@@ -356,14 +357,15 @@ void executerCommandePlanDeVol(const char commande[]) {
   else if(chaineCommencePar(commande, "FG ")) {
     if(etape > CONFIGURATION) {
       copierToken(commande, " ", 1, chEtape);
-      // TODO Vérifier chEtape
       etape = atoi(chEtape);
-      dateEtapeSuivante = millis();
+      if(etape >= 0 && etape < NB_ETAPES) {
+        dateEtapeSuivante = millis();
 
-      itoa(etape, strLog, 10);
-      logger.log(MODULE_SYSTEME, "GOTO_STEP", strLog);
+        itoa(etape, strLog, 10);
+        logger.log(MODULE_SYSTEME, "GOTO_STEP", strLog);
 
-      executerEtapeEtPreparerEtapeSuivante();
+        executerEtapeEtPreparerEtapeSuivante();
+      }
     }
   }
   else {
@@ -395,8 +397,10 @@ void executerCommandeServo(const char commande[]) {
     copierToken(commande, " ", 2, chParam);
     servo = atoi(chServo);
     param = atoi(chParam);
-    // TODO Vérifier servo
-    servos[servo].angle(param);
+    if(servo >= 0 && servo < NB_SERVOS
+        && param >= 0 && param <= 180) {
+      servos[servo].angle(param);
+        }
   }
   // Servo sur une position (avec calibration) de -100 à 100
   else if(chaineCommencePar(commande, "SP ")) {
@@ -404,8 +408,10 @@ void executerCommandeServo(const char commande[]) {
     copierToken(commande, " ", 2, chParam);
     servo = atoi(chServo);
     param = atoi(chParam);
-    // TODO Vérifier servo
-    servos[servo].position(param);
+    if(servo >= 0 && servo < NB_SERVOS
+        && param >= SERVO_POSITION_MIN && param <= SERVO_POSITION_MAX) {
+      servos[servo].position(param);
+    }
   }
   // Déalage d'offset pour un servo
   else if(chaineCommencePar(commande, "SO ")) {
@@ -413,8 +419,9 @@ void executerCommandeServo(const char commande[]) {
     copierToken(commande, " ", 2, chParam);
     servo = atoi(chServo);
     param = atoi(chParam);
-    // TODO Vérifier servo
-    servos[servo].setDecalage(param);
+    if(servo >= 0 && servo < NB_SERVOS) {
+      servos[servo].setDecalage(param);
+    }
   }
   // Coefficient entre angle et position
   else if(chaineCommencePar(commande, "SS ")) {
@@ -422,15 +429,17 @@ void executerCommandeServo(const char commande[]) {
     copierToken(commande, " ", 2, chParam);
     servo = atoi(chServo);
     f = atof(chParam);
-    // TODO Vérifier servo
-    servos[servo].setPente(f);
+    if(servo >= 0 && servo < NB_SERVOS) {
+      servos[servo].setPente(f);
+    }
   }
   // Paramètres et consigne actuelle du servo
   else if(chaineCommencePar(commande, "SR ")) {
     copierToken(commande, " ", 1, chServo);
     servo = atoi(chServo);
-    // TODO Vérifier servo
-    servos[servo].logStatut();
+    if(servo >= 0 && servo < NB_SERVOS) {
+      servos[servo].logStatut();
+    }
   }
   else {
     logger.log(MODULE_COMMANDE, "COMMAND_ERROR_UNKNOWN", "Commande non reconnue");
@@ -445,12 +454,20 @@ void executerCommandeLogger(const char commande[]) {
   }
   // Écriture d'un log quelconque
   else if(chaineCommencePar(commande, "LL")) {
-    copierToken(commande, " ", 1, str);
+    copierToken(commande, " ", 1, str, true);
     logger.log(MODULE_COMMANDE, "CUSTOM_LOG", str);
   }
   // Forcer l'écriture sur la carte SD
   else if(chaineCommencePar(commande, "LF")) {
     logger.forcerEcritureSurCarteSd();
+  }
+  // Renvoie la taille du fichier de logs
+  else if(chaineCommencePar(commande, "LT")) {
+    logger.tailleFichierCarteSd();
+  }
+  // Vide le fichier de logs
+  else if(chaineCommencePar(commande, "LD")) {
+    logger.viderFichierCarteSd();
   }
   // Statuts des loggers
   else if(chaineCommencePar(commande, "LS")) {
@@ -566,15 +583,17 @@ void executerCommandeCentraleInertielle(const char commande[]) {
   else if(chaineCommencePar(commande, "IU ")) {
     copierToken(commande, " ", 1, chServo);
     servo = atoi(chServo);
-    // TODO vérifier servo
-    centrale.setRcsServoX(&servos[servo]);
+    if(servo >= 0 && servo < NB_SERVOS) {
+      centrale.setRcsServoX(&servos[servo]);
+    }
   }
   // Servo contrôlant l'axe Y pour la stabilisation par la tuyère orientable
   else if(chaineCommencePar(commande, "IV ")) {
     copierToken(commande, " ", 1, chServo);
     servo = atoi(chServo);
-    // TODO vérifier servo
-    centrale.setRcsServoY(&servos[servo]);
+    if(servo >= 0 && servo < NB_SERVOS) {
+      centrale.setRcsServoY(&servos[servo]);
+    }
   }
   
   // Activition de la stabilisation par les ailerons
@@ -589,15 +608,17 @@ void executerCommandeCentraleInertielle(const char commande[]) {
   else if(chaineCommencePar(commande, "IX ")) {
     copierToken(commande, " ", 1, chServo);
     servo = atoi(chServo);
-    // TODO vérifier servo
-    centrale.setWcsServoX(&servos[servo]);
+    if(servo >= 0 && servo < NB_SERVOS) {
+      centrale.setWcsServoX(&servos[servo]);
+    }
   }
   // Servo contrôlant l'axe Y pour la stabilisation par les ailerons
   else if(chaineCommencePar(commande, "IY ")) {
     copierToken(commande, " ", 1, chServo);
     servo = atoi(chServo);
-    // TODO vérifier servo
-    centrale.setWcsServoY(&servos[servo]);
+    if(servo >= 0 && servo < NB_SERVOS) {
+      centrale.setWcsServoY(&servos[servo]);
+    }
   }
   // Paramètres de la fonction de correction (asservissement de la trajectoire)
   else if(chaineCommencePar(commande, "ICF ")) {

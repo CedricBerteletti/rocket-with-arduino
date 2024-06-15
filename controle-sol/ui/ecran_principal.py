@@ -29,6 +29,7 @@ class EcranPrincipal(QFrame):
         self.telemetrie = telemetrie
         self.centrale = centrale
         self.graphs_refresh_delay_ms = settings.get_int("graphs.refresh_delay_ms")
+        self.password = ""
         self.init_ui()
 
 
@@ -112,6 +113,10 @@ class EcranPrincipal(QFrame):
 
         button = QPushButton("Lancer !")
         self.grp_command.layout().addWidget(button, 0, 3)
+        # TODO
+
+        button = QPushButton("Stop !")
+        self.grp_command.layout().addWidget(button, 0, 4)
         # TODO
 
 

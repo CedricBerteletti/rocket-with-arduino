@@ -89,6 +89,21 @@ void Logger::forcerEcritureSurCarteSd() {
   }
 }
 
+// Renvoie la taille du fichier de logs
+long Logger::tailleFichierCarteSd() {
+  sprintf(strTmp, "%i", fichier.size());
+  log(MODULE_LOGGER, "LOGFILE_SIZE", strTmp);
+}
+
+// Vide le fichier de logs
+void Logger::viderFichierCarteSd() {
+  if(fichier) {
+    fichier.close();
+  }
+  SD.remove(NOM_FICHIER_LOGS);
+  fichier = SD.open(NOM_FICHIER_LOGS, FILE_WRITE);
+}
+
 // Fonctions d'écriture des logs
 void Logger::log(const char module[], const char message[], const char details[]) {
   if (logSerieActif || logCarteSdActif || logUdpActif) {

@@ -1,4 +1,21 @@
-# Script pour tester les serco-moteurs
+# Script pour tester les servo-moteurs
 
 
-#TODO
+flightplan.configureStep 0 5000 logger.log TEST SERVOS {{DATE}}
+
+flightplan.configureStep 1 0 servo.setPosition 0 -100
+flightplan.configureStep 2 0 servo.setPosition 1 -100
+flightplan.configureStep 3 0 servo.setPosition 2 -100
+flightplan.configureStep 4 2000 servo.setPosition 3 -100
+
+flightplan.configureStep 5 0 servo.setPosition 0 0
+flightplan.configureStep 6 0 servo.setPosition 1 0
+flightplan.configureStep 7 0 servo.setPosition 2 0
+flightplan.configureStep 8 2000 servo.setPosition 3 0
+
+flightplan.configureStep 9 0 servo.setPosition 0 100
+flightplan.configureStep 10 0 servo.setPosition 1 100
+flightplan.configureStep 11 0 servo.setPosition 2 100
+flightplan.configureStep 12 5000 servo.setPosition 3 100
+
+flightplan.configureStep 13 0 flightplan.goStep 1

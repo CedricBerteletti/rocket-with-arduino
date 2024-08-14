@@ -14,9 +14,8 @@
 
 ## Inserts M2 / M2.5 / M3
 
-Trou pour insert M2 : 3,2 mm
-Trou pour insert M3 : 4,0 mm
-Trou pour insert M3 : 4,0 mm
+Diamètre trou pour insert M2 : 3,2 mm
+Diamètre trou pour insert M3 : 4,0 mm
 
 
 ## Dimensionnement des parachutes

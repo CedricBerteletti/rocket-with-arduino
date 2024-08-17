@@ -1,16 +1,21 @@
 # Script initialisant les calibrations des servo-moteurs et de la stabilisation
 servo.setOffset 0 90
-servo.setSlope 0 0.5
+servo.setSlope 0 -0.3
 servo.setOffset 1 90
-servo.setSlope 1 0.5
+servo.setSlope 1 0.3
 servo.setOffset 2 90
-servo.setSlope 2 0.5
+servo.setSlope 2 0.3
 servo.setOffset 3 90
-servo.setSlope 3 0.5
+servo.setSlope 3 0.3
 
-imu.setCorrectionFunctionParameters 0.0 0.0 1.0 0.0
+imu.setCorrectionFunctionParameters 0.0 0.0 100.0 0.0
 
 servo.setPosition 0 0
 servo.setPosition 1 0
 servo.setPosition 2 0
 servo.setPosition 3 0
+
+imu.setWcsServoX 1
+imu.setWcsServoY 0
+imu.setRcsServoX 2
+imu.setRcsServoY 3

@@ -139,8 +139,7 @@ void CentraleInertielle::calibrer(float ax, float ay, float az, float valpha, fl
   offsetAccZ = az - azSum/TAILLE_BUFFER_DONNEES_INERTIELLES;
   offsetVAlpha = valpha - valphaSum/TAILLE_BUFFER_DONNEES_INERTIELLES; 
   offsetVBeta = vbeta - vbetaSum/TAILLE_BUFFER_DONNEES_INERTIELLES;
-  offsetVGamma = vgamma - vgammaSum/TAILLE_BUFFER_DONNEES_INERTIELLES;
-  
+  offsetVGamma = vgamma - vgammaSum/TAILLE_BUFFER_DONNEES_INERTIELLES;  
 }
 
 void CentraleInertielle::logDonneesCalibration() {
@@ -156,7 +155,6 @@ void CentraleInertielle::logDonneesCalibration() {
 }
 
 void CentraleInertielle::log(DonneesInertielles &data, const char module[], const char message[]) {
-  Serial.println("Log IMU");
   int longueur = 5 + decimales;
   itoa(data.t, strLog, 10);
   strcat(strLog, SEPARATEUR_DATA);

@@ -1,3 +1,5 @@
 # Script arrêtant les statuts auto de la fusée
 logger.deactivateLogFlush
 logger.deactivateLogRocketStatus
+
+#logger.deactivateLogImuData

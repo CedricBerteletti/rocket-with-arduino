@@ -38,8 +38,9 @@ void Servomoteur::setPente(float p) {
 }
 
 void Servomoteur::angle(int a) {
-  servo.write(a);  
-  logger->log(MODULE_SERVO, "ANGLE", itoa(a, strTmp, 10));
+  servo.write(a);
+  sprintf(strTmp, "%i | %i", id, a);
+  logger->log(MODULE_SERVO, "ANGLE", strTmp);
 }
 
 void Servomoteur::position(int p) {

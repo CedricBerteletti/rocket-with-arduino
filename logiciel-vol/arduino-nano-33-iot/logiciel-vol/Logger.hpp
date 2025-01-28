@@ -26,7 +26,7 @@ class Logger
     bool logSerieActif = true;
     bool logCarteSdActif = false;
     bool logUdpActif = false;
-    bool logForcageEcritureSurCarteSd = true;
+    bool logForcageEcritureSurCarteSd = false;
     Wifi *wifi;
   private:
     static const char MODULE_LOGGER[];

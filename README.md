@@ -40,6 +40,9 @@ Permet de recevoir via Wifi les commandes (cf. exemple-script-fusee.rl) :
     - *logger.activateLogImuData* et *logger.deactivateLogImuData* : active/désactive les logs (via serial, SD-Card et Wifi) des données de la centrale inertielle.
     - *logger.activateLogFlush* et *logger.deactivateLogFlush*: active/désactive les logs de vidage du cache sur la carte SD.
     - *logger.activateLogRocketStatus* et *logger.deactivateLogRocketStatus* : active/désactive les logs d'état général de la fusée.
+	- *logger.activateLogToSerial* et *logger.deactivateLogToSerial*
+	- *logger.activateLogToSd* et *logger.deactivateLogToSd*
+	- *logger.activateLogToWifi* et *logger.deactivateLogToWifi*
 - Plan/script de vol de la fusée :
     - *flightplan.configureStep no_step delai commande* : précise la temporisation (durée en ms) de l'étape *no_step* et la commande à exécuter au **début** de l'étape.
     - *flightplan.getSteps* : renvoie toutes les étapes de vol de la fusée.

@@ -91,7 +91,7 @@ void setup() {
   logger.wifi = &wifi;
   logger.logUdpActif = true;
 
-  // Pour éviter de polLuer les logs, on désactive les logs des données inertielles avant le lancement
+  // Pour éviter de polluer les logs, on désactive les logs des données inertielles avant le lancement
   centrale.loggingData = false;
   centrale.init();
 
@@ -496,6 +496,30 @@ void executerCommandeLogger(const char commande[]) {
   // Activer les logs d'états de la fusée
   else if(chaineCommencePar(commande, "LR 1")) {
     loggingStatutFusee = true;
+  }
+  // Désactiver les logs vers la liaison série
+  else if(chaineCommencePar(commande, "LX 0")) {
+    logger.logSerieActif = false;
+  }
+  // Activer les logs vers la liaison série
+  else if(chaineCommencePar(commande, "LX 1")) {
+    logger.logSerieActif = true;
+  }
+  // Désactiver les logs vers la carte SD
+  else if(chaineCommencePar(commande, "LY 0")) {
+    logger.logCarteSdActif = false;
+  }
+  // Activer les logs vers la carte SD
+  else if(chaineCommencePar(commande, "LY 1")) {
+    logger.logCarteSdActif = true;
+  }
+  // Désactiver les logs via le wifi
+  else if(chaineCommencePar(commande, "LZ 0")) {
+    logger.logUdpActif = false;
+  }
+  // Activer les logs via le wifi
+  else if(chaineCommencePar(commande, "LZ 1")) {
+    logger.logUdpActif = true;
   }
   else {
     logger.log(MODULE_COMMANDE, "COMMAND_ERROR_UNKNOWN", "Commande non reconnue");

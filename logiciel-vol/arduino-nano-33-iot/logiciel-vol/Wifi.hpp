@@ -22,7 +22,7 @@ class Wifi
   public:
     Wifi();
     bool actif = false;
-    bool loggingIo = true;
+    bool loggingIo = false;
     void listerReseaux();
     void connecter();
     void connecterAvecFallback(const char ssid[], const char pwd[]);

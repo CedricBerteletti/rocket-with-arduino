@@ -3,3 +3,6 @@ logger.deactivateLogFlush
 logger.deactivateLogRocketStatus
 
 #logger.deactivateLogImuData
+
+logger.deactivateLogToSd
+logger.deactivateLogToWifi

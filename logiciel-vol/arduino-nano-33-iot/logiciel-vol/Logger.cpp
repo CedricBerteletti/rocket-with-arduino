@@ -78,7 +78,7 @@ void Logger::initCarteSd() {
 void Logger::logStatut()
 {
   sprintf(strTmp, "Logger série %i | Logger SD %i | Logger wifi %i", logSerieActif, logCarteSdActif, logUdpActif);
-  log(MODULE_LOGGER, "STATUS", strTmp);  
+  log(MODULE_LOGGER, "STATUS", strTmp);
 }
 
 // Force l'écriture du cache sur la carte SD
@@ -109,11 +109,11 @@ void Logger::log(const char module[], const char message[], const char details[]
   if (logSerieActif || logCarteSdActif || logUdpActif) {
     delay(1); // Attente minimale pour éviter d'envoyer plein de logs à la suite (risque de perte)
     formaterLog(strLog, module, message, details);
-  }
 
-  if(logSerieActif) Serial.println(strLog);
-  if(logUdpActif) wifi->ecrireUdp(strLog);
-  if(logCarteSdActif) fichier.println(strLog);
+    if(logSerieActif) Serial.println(strLog);
+    if(logUdpActif) wifi->ecrireUdp(strLog);
+    if(logCarteSdActif) fichier.println(strLog);
+  }
 }
 
 

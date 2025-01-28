@@ -1,4 +1,3 @@
-
 ## Quelques dimensions standards
 
 - Diam engrenage 12 dents : 13.5 mm
@@ -15,8 +14,9 @@
 ## Inserts M2 / M2.5 / M3
 
 Diamètre trou pour insert M2 : 3,2 mm
+Diamètre trou pour vis M2 : 2,0 mm
 Diamètre trou pour insert M3 : 4,0 mm
-
+Diamètre trou pour vis M3 : 3,0 mm
 
 ## Dimensionnement des parachutes
 
@@ -26,9 +26,3 @@ Diamètre trou pour insert M3 : 4,0 mm
 - 55 cm : 200 - 300 g
 - 45 cm : 100 - 200 g
 - 35 cm : 50 - 100 g
-
-
-
-
-
-
